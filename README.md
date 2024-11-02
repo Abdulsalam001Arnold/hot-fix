@@ -68,3 +68,64 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+{listEvents.length === 0 ? (
+          <Typography variant="body1" align="center">
+            No events available.
+          </Typography>
+        ) : (
+          listEvents.map((event, index) => (
+            <Card key={index} style={{ marginBottom: "20px" }}>
+              {event.imageUrl && (
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={event.images}
+                  alt={event.eventName}
+                />
+              )}
+              <CardContent>
+                <Typography variant="h5">{event.eventName}</Typography>
+                <Typography variant="body2" color="textSecondary" gutterBottom>
+                  {event.locationType === "physical"
+                    ? `Location: ${event.location}`
+                    : "Virtual Event"}
+                </Typography>
+                <Typography variant="body2">
+                  Description: {event.eventDescription}
+                </Typography>
+                <Typography variant="body2">
+                  {event.isFree ? "Free Event" : `Price: $${event.value}`}
+                </Typography>
+              </CardContent>
+            </Card>
+          ))
+        )}
+
+            { showEventUpload ? <EventsUploadPage setShowEventUpload={setShowEventUpload}/> : <></>}
+    <Stack
+      sx={{
+        width: "100%",
+        mt: "92px",
+        ml: "5px",
+        height: "calc(100vh - 50px)",
+        overflow: "auto",
+      }}
+    >
+      <Navbar  setShowEventUpload={setShowEventUpload}/>
+      
+      <Container maxWidth="md" sx={{mt: '50px'}}>
+
+        <Typography   sx={{
+            fontWeight: "700",
+            fontSize: "22px",
+            lineHeight: "24px",
+            textAlign: "center",
+            color: "#000000",
+          }} variant="h6" align="center" gutterBottom>
+          Event List
+        </Typography>
+
+              </Container>
+    </Stack>

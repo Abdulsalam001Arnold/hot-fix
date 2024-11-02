@@ -13,90 +13,61 @@ import {
   CardMedia,
 } from "@mui/material";
 
-const Events = () => {
+export default function Events() {
   const [ showEventUpload, setShowEventUpload ] = useState(false)
   // const { events } = useContext(EventContext);
   const [listEvents, setListEvents] = useState([])
-  const fetchEvents = async () => {
-    const response = await fetch('https://ovb-event.dev.cloudethusiast.net/api/Events')
-    const data = await response.json()
-    console.log(data.data.data)
-    console.log(data.data.data)
-    if (response.data.success) {
-      setListEvents(response.data.data)  
-      console.log(listEvents)
-    }else{
-      toast.error("Error")
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const url = 'https://ovb-event.dev.cloudethusiast.net/api/Events'
+      try{
+        const response = await fetch(url)
+        if(!response.ok){
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json()
+        console.log('Fetched data:', data);
+  
+        if(Array.isArray(data.data)){
+          setListEvents(data.data)
+          console.log('Events loaded:', data.data)  
+        }else{
+          console.log(`Fetched data is not an array:`, data) 
+          setListEvents([])
+        }
+      }catch(error){
+        console.error('Error fetching data:', error)
+      }
     }
 
-  }
-  
-  useEffect(() => {
-     fetchEvents()
-     console.log('the effect has')
+    fetchEvents()
   }, [])
+   
   return (
     <>
-    { showEventUpload ? <EventsUploadPage setShowEventUpload={setShowEventUpload}/> : <></>}
-    <Stack
-      sx={{
-        width: "100%",
-        mt: "92px",
-        ml: "5px",
-        height: "calc(100vh - 50px)",
-        overflow: "auto",
-      }}
-    >
-      <Navbar  setShowEventUpload={setShowEventUpload}/>
-      
-      <Container maxWidth="md" sx={{mt: '50px'}}>
 
-        <Typography   sx={{
-            fontWeight: "700",
-            fontSize: "22px",
-            lineHeight: "24px",
-            textAlign: "center",
-            color: "#000000",
-          }} variant="h6" align="center" gutterBottom>
-          Event List
-        </Typography>
 
-        {listEvents.length === 0 ? (
-          <Typography variant="body1" align="center">
-            No events available.
-          </Typography>
-        ) : (
-          listEvents.map((event, index) => (
-            <Card key={index} style={{ marginBottom: "20px" }}>
-              {event.imageUrl && (
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image={event.images}
-                  alt={event.eventName}
-                />
-              )}
-              <CardContent>
-                <Typography variant="h5">{event.eventName}</Typography>
-                <Typography variant="body2" color="textSecondary" gutterBottom>
-                  {event.locationType === "physical"
-                    ? `Location: ${event.location}`
-                    : "Virtual Event"}
-                </Typography>
-                <Typography variant="body2">
-                  Description: {event.eventDescription}
-                </Typography>
-                <Typography variant="body2">
-                  {event.isFree ? "Free Event" : `Price: $${event.value}`}
-                </Typography>
-              </CardContent>
-            </Card>
-          ))
-        )}
-      </Container>
-    </Stack>
+          <div className="red-back">
+            {listEvents.length > 0 ? (
+              listEvents.map((item, index) => (
+                <div key={index}>
+                  <h1>
+                    {item.eventName}
+                  </h1>
+                  <img src={item.images} alt={item.eventName}/>
+                  <h1>
+                    {item.speakers}
+                  </h1>
+                </div>
+              ))
+            ) : (
+                <div>No data available</div>
+                )}
+          </div>
+        
+
     </>
   );
-};
+}
 
-export default Events;
